@@ -15,6 +15,13 @@
       "when": 1752520236504,
       "tag": "0001_unique_talos",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1752522520092,
+      "tag": "0002_bumpy_leader",
+      "breakpoints": true
     }
   ]
 }

@@ -1,22 +1,12 @@
 import { NextRequest, NextResponse } from "next/server"
-import { signUpType } from "../../../zodTypes/users/signUpType"
-import { databaseSchema, drizzleOrm } from "@repo/database"
 import { tryCatch } from "../../../helpers/tryCatch"
+import { otpType } from "../../../zodTypes/otp/otpType"
 import { db } from "../../../../database"
-import { hashPassword } from "../../../helpers/bcrypt"
-import { generateRandomNumber } from "../../../helpers/otp"
+import { databaseSchema, drizzleOrm } from "@repo/database"
 
 export async function POST(req: NextRequest) {
     const body = await tryCatch(req.json())
-    if (body.error) {
-        return NextResponse.json({
-            message: "Invalid request body"
-        }, {
-            status: 500
-        })
-    }
-
-    const parsedData = signUpType.safeParse(body.data)
+    const parsedData = otpType.safeParse(body.data)
     if (!parsedData.success) {
         const errors: string[] = []
         parsedData.error.issues.forEach((issue) => {
@@ -44,7 +34,8 @@ export async function POST(req: NextRequest) {
             status: 500
         })
     }
-    if (userExistsInDbResult.data[0]) {
+    let userFromDb = userExistsInDbResult.data[0]
+    if (!userFromDb) {
         return NextResponse.json({
             message: "Choose different username"
         }, {
@@ -52,24 +43,29 @@ export async function POST(req: NextRequest) {
         })
     }
 
-    let randomNumberOtp = generateRandomNumber()
-    const hashedPassword = await hashPassword(parsedData.data.password)
-    const insertDataResult = await tryCatch(db.insert(databaseSchema.usersTable).values({
-        email: parsedData.data.email,
-        password: hashedPassword,
-        otp: randomNumberOtp
-    }))
-    if (insertDataResult.error) {
+    if (userFromDb.otp == parsedData.data.otp) {
         return NextResponse.json({
-            message: "Issue inserting data to database"
+            message: "Invalid OTP"
         }, {
-            status: 500
+            status: 400
         })
     }
 
+    if (!userFromDb.isVerified) {
+        const dbResult = await tryCatch(db.update(databaseSchema.usersTable).set({
+            isVerified: true
+        }))
+        if (dbResult.error) {
+            return NextResponse.json({
+                message: "Issue talking to the database"
+            }, {
+                status: 400
+            })
+        }
+    }
     return NextResponse.json({
-        message: "Created user successfully",
+        message: "User verified",
     }, {
-        status: 201
+        status: 200
     })
 }
