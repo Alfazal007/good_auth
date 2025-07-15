@@ -7,10 +7,9 @@ import { useEffect } from "react";
 export function Home() {
     const router = useRouter()
     useEffect(() => {
-        const token = Cookies.get('accessToken');
         const email = Cookies.get('email');
         const id = Cookies.get('id');
-        if (!token || !email || !id) {
+        if (!email || !id) {
             router.push("/auth/signin")
             return
         }

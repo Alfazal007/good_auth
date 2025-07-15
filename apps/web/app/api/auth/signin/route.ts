@@ -4,6 +4,8 @@ import { db } from "../../../../database"
 import { databaseSchema, drizzleOrm } from "@repo/database"
 import { signUpType } from "@/zodTypes/users/signUpType"
 import { generateAccessToken } from "@/helpers/tokens"
+import { comparePassword } from "@/helpers/bcrypt"
+import { redis } from "@/helpers/redis"
 
 export async function POST(req: NextRequest) {
     const body = await tryCatch(req.json())
@@ -52,11 +54,23 @@ export async function POST(req: NextRequest) {
         })
     }
 
-    // TODO:: password verification
+    const isPasswordValid = await comparePassword(parsedData.data.password, userFromDb.password)
+    if (!isPasswordValid) {
+        return NextResponse.json({
+            message: "Incorrect password"
+        }, {
+            status: 400
+        })
+    }
+    if (!redis.isReady) {
+        await redis.connect()
+    }
 
     const accessToken = generateAccessToken(userFromDb.email, userFromDb.id)
+    await tryCatch(redis.set(`ACCESSTOKENORGS:${userFromDb.id}`, accessToken))
+
     const response = NextResponse.json({
-        message: "User verified",
+        message: "User logged in successfully",
     }, {
         status: 200
     })
@@ -80,6 +94,7 @@ export async function POST(req: NextRequest) {
         name: 'accessToken',
         value: accessToken,
         secure: true,
+        httpOnly: true,
         path: '/',
         maxAge: 60 * 60 * 24,
     })
