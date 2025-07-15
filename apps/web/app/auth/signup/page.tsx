@@ -1,22 +1,22 @@
 "use client"
 
-import React, { useState } from 'react';
-import { Shield, Mail, Lock, Eye, EyeOff, ArrowLeft, User } from 'lucide-react';
-import { useRouter } from 'next/navigation';
+import React, { useState } from 'react'
+import { Shield, Mail, Lock, Eye, EyeOff, ArrowLeft, User } from 'lucide-react'
+import { useRouter } from 'next/navigation'
+import { toast } from 'sonner'
+import axios from "axios"
 
 function SignUp() {
-    const [step, setStep] = useState<'signup' | 'otp'>('signup');
+    const [step, setStep] = useState<'signup' | 'otp'>('signup')
     const [formData, setFormData] = useState({
-        name: '',
         email: '',
         password: '',
         confirmPassword: ''
-    });
-    const [otp, setOtp] = useState(['', '', '', '', '', '']);
-    const [showPassword, setShowPassword] = useState(false);
-    const [showConfirmPassword, setShowConfirmPassword] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
-
+    })
+    const [otp, setOtp] = useState(['', '', '', '', '', ''])
+    const [showPassword, setShowPassword] = useState(false)
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+    const [isLoading, setIsLoading] = useState(false)
     const router = useRouter()
 
     function onBack() {
@@ -25,67 +25,87 @@ function SignUp() {
     }
 
     const handleInputChange = (field: string, value: string) => {
-        setFormData(prev => ({ ...prev, [field]: value }));
-    };
+        setFormData(prev => ({ ...prev, [field]: value }))
+    }
 
     const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
+        e.preventDefault()
         if (formData.password !== formData.confirmPassword) {
-            alert('Passwords do not match');
-            return;
+            toast("Passwords do not match")
+            return
         }
-
-        setIsLoading(true);
-        setTimeout(() => {
-            setIsLoading(false);
-            setStep('otp');
-        }, 1500);
-    };
+        setIsLoading(true)
+        const signUpUrl = `http://localhost:3000/api/auth/signup`
+        try {
+            const signUpResponse = await axios.post(signUpUrl, {
+                "email": formData.email,
+                "password": formData.password
+            })
+            if (signUpResponse.status == 201) {
+                setStep("otp")
+            } else {
+                toast(`Issue signing up(within try)`)
+            }
+        } catch (err) {
+            toast(`Issue creating new user`)
+        } finally {
+            setIsLoading(false)
+        }
+    }
 
     const handleOtpChange = (index: number, value: string) => {
         if (value.length <= 1) {
-            const newOtp = [...otp];
-            newOtp[index] = value;
-            setOtp(newOtp);
+            const newOtp = [...otp]
+            newOtp[index] = value
+            setOtp(newOtp)
 
             // Auto-focus next input
             if (value && index < 5) {
-                const nextInput = document.getElementById(`otp-${index + 1}`);
-                nextInput?.focus();
+                const nextInput = document.getElementById(`otp-${index + 1}`)
+                nextInput?.focus()
             }
         }
-    };
+    }
 
     const handleOtpKeyDown = (index: number, e: React.KeyboardEvent) => {
         if (e.key === 'Backspace' && !otp[index] && index > 0) {
-            const prevInput = document.getElementById(`otp-${index - 1}`);
-            prevInput?.focus();
+            const prevInput = document.getElementById(`otp-${index - 1}`)
+            prevInput?.focus()
         }
-    };
+    }
 
     const handleOtpSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        const otpValue = otp.join('');
-        if (otpValue.length !== 6) {
-            alert('Please enter the complete OTP');
-            return;
+        e.preventDefault()
+        setIsLoading(true)
+        try {
+            const otpValue = otp.join('')
+            if (otpValue.length !== 6) {
+                toast('Please enter the complete OTP')
+                return
+            }
+            const otpUrl = `http://localhost:3000/api/auth/otp-verify`
+            await axios.post(otpUrl, {
+                otp: otpValue,
+                email: formData.email
+            });
+            router.push("/auth/signin")
+            return
+        } catch (err) {
+            console.log({ err })
+            toast("Issue verifying the user")
         }
-
-        setIsLoading(true);
-        // Simulate API call
-        setTimeout(() => {
-            setIsLoading(false);
-            alert('Account created successfully!');
-        }, 1500);
-    };
+        finally {
+            setIsLoading(false)
+        }
+    }
 
     const handleGoogleSignUp = () => {
-        alert('Google Sign Up clicked');
-    };
+        alert('Google Sign Up clicked')
+    }
 
     const resendOtp = () => {
-        alert('OTP resent to your email');
-    };
+        alert('OTP resent to your email')
+    }
 
     if (step === 'otp') {
         return (
@@ -159,7 +179,7 @@ function SignUp() {
                     </div>
                 </div>
             </div>
-        );
+        )
     }
 
     return (
@@ -212,24 +232,6 @@ function SignUp() {
 
                     {/* Email/Password Form */}
                     <form onSubmit={handleSubmit} className="space-y-4">
-                        <div>
-                            <label htmlFor="name" className="block text-sm font-medium text-gray-300 mb-2">
-                                Full name
-                            </label>
-                            <div className="relative">
-                                <User className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-                                <input
-                                    id="name"
-                                    type="text"
-                                    value={formData.name}
-                                    onChange={(e) => handleInputChange('name', e.target.value)}
-                                    className="w-full pl-10 pr-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                    placeholder="Enter your full name"
-                                    required
-                                />
-                            </div>
-                        </div>
-
                         <div>
                             <label htmlFor="email" className="block text-sm font-medium text-gray-300 mb-2">
                                 Email address
@@ -334,7 +336,7 @@ function SignUp() {
                 </div>
             </div>
         </div>
-    );
+    )
 }
 
-export default SignUp;
+export default SignUp

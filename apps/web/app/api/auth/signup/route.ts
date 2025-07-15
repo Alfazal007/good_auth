@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server"
 import { signUpType } from "../../../zodTypes/users/signUpType"
 import { databaseSchema, drizzleOrm } from "@repo/database"
+import { sendMail } from "@repo/email"
 import { tryCatch } from "../../../helpers/tryCatch"
 import { db } from "../../../../database"
 import { hashPassword } from "../../../helpers/bcrypt"
@@ -58,7 +59,8 @@ export async function POST(req: NextRequest) {
         email: parsedData.data.email,
         password: hashedPassword,
         otp: randomNumberOtp
-    }))
+    }).returning())
+
     if (insertDataResult.error) {
         return NextResponse.json({
             message: "Issue inserting data to database"
@@ -66,6 +68,8 @@ export async function POST(req: NextRequest) {
             status: 500
         })
     }
+
+    await sendMail(process.env.EMAIL as string, process.env.PASSWORD as string, [parsedData.data.email], "Email Verification", `Use the following OTP ${randomNumberOtp}`, "")
 
     return NextResponse.json({
         message: "Created user successfully",

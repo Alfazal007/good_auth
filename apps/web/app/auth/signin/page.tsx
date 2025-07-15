@@ -1,14 +1,16 @@
 "use client"
 
-import React, { useState } from 'react';
-import { Shield, Mail, Lock, Eye, EyeOff, ArrowLeft } from 'lucide-react';
-import { useRouter } from 'next/navigation';
+import React, { useState } from 'react'
+import { Shield, Mail, Lock, Eye, EyeOff, ArrowLeft } from 'lucide-react'
+import { useRouter } from 'next/navigation'
+import axios from 'axios'
+import { toast } from 'sonner'
 
 function SignIn() {
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [showPassword, setShowPassword] = useState(false);
-    const [isLoading, setIsLoading] = useState(false);
+    const [email, setEmail] = useState('')
+    const [password, setPassword] = useState('')
+    const [showPassword, setShowPassword] = useState(false)
+    const [isLoading, setIsLoading] = useState(false)
 
     const router = useRouter()
     function onBack() {
@@ -17,18 +19,27 @@ function SignIn() {
     }
 
     const handleSubmit = async (e: React.FormEvent) => {
-        e.preventDefault();
-        setIsLoading(true);
-        // Simulate API call
-        setTimeout(() => {
-            setIsLoading(false);
-            alert('Sign in successful!');
-        }, 1500);
-    };
+        e.preventDefault()
+        setIsLoading(true)
+        try {
+            const signInUrl = `http://localhost:3000/api/auth/signin`
+            await axios.post(signInUrl, {
+                email,
+                password
+            }, { withCredentials: true })
+            router.push(`/organization/home`)
+            return
+        } catch (err) {
+            console.log({ err })
+            toast("Issue signing in")
+        } finally {
+            setIsLoading(false)
+        }
+    }
 
     const handleGoogleSignIn = () => {
-        alert('Google Sign In clicked');
-    };
+        alert('Google Sign In clicked')
+    }
 
     return (
         <div className="min-h-screen bg-gray-900 flex items-center justify-center px-4">
@@ -158,7 +169,7 @@ function SignIn() {
                 </div>
             </div>
         </div>
-    );
+    )
 }
 
-export default SignIn;
+export default SignIn

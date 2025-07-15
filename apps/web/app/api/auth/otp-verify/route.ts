@@ -37,13 +37,13 @@ export async function POST(req: NextRequest) {
     let userFromDb = userExistsInDbResult.data[0]
     if (!userFromDb) {
         return NextResponse.json({
-            message: "Choose different username"
+            message: "User not found in the database"
         }, {
-            status: 400
+            status: 404
         })
     }
 
-    if (userFromDb.otp == parsedData.data.otp) {
+    if (userFromDb.otp != parsedData.data.otp) {
         return NextResponse.json({
             message: "Invalid OTP"
         }, {
