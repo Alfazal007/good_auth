@@ -6,6 +6,7 @@ import { useEffect } from "react";
 
 export function Home() {
     const router = useRouter()
+
     useEffect(() => {
         const email = Cookies.get('email');
         const id = Cookies.get('id');
