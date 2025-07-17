@@ -13,7 +13,10 @@ import type {
   FilterApi,
   FunctionReference,
 } from "convex/server";
+import type * as createApiKeyAndSecret from "../createApiKeyAndSecret.js";
 import type * as createOrganization from "../createOrganization.js";
+import type * as getApiKeyByProjectId from "../getApiKeyByProjectId.js";
+import type * as getOrganizationById from "../getOrganizationById.js";
 
 /**
  * A utility for referencing Convex functions in your app's API.
@@ -24,7 +27,10 @@ import type * as createOrganization from "../createOrganization.js";
  * ```
  */
 declare const fullApi: ApiFromModules<{
+  createApiKeyAndSecret: typeof createApiKeyAndSecret;
   createOrganization: typeof createOrganization;
+  getApiKeyByProjectId: typeof getApiKeyByProjectId;
+  getOrganizationById: typeof getOrganizationById;
 }>;
 export declare const api: FilterApi<
   typeof fullApi,

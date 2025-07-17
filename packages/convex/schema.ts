@@ -8,9 +8,9 @@ export default defineSchema({
     }),
 
     projects: defineTable({
-        body: v.string(),
         organization: v.id("organizations"),
         apiKey: v.string(),
         apiSecret: v.string()
-    }).index("by_token", ["apiKey"]),
+    })
+        .index("by_organization", ["organization"]),
 })
