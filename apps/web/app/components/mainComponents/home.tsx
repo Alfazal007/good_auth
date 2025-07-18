@@ -3,6 +3,7 @@
 import Cookies from 'js-cookie';
 import { useRouter } from 'next/navigation';
 import { useEffect } from "react";
+import Nav from './Nav';
 
 export function Home() {
     const router = useRouter()
@@ -18,7 +19,7 @@ export function Home() {
 
     return (
         <>
-            Hello World!
+            <Nav />
         </>
     )
 }

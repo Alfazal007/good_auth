@@ -16,6 +16,7 @@ import type {
 import type * as createApiKeyAndSecret from "../createApiKeyAndSecret.js";
 import type * as createOrganization from "../createOrganization.js";
 import type * as getApiKeyByProjectId from "../getApiKeyByProjectId.js";
+import type * as getOrgForUserId from "../getOrgForUserId.js";
 import type * as getOrganizationById from "../getOrganizationById.js";
 
 /**
@@ -30,6 +31,7 @@ declare const fullApi: ApiFromModules<{
   createApiKeyAndSecret: typeof createApiKeyAndSecret;
   createOrganization: typeof createOrganization;
   getApiKeyByProjectId: typeof getApiKeyByProjectId;
+  getOrgForUserId: typeof getOrgForUserId;
   getOrganizationById: typeof getOrganizationById;
 }>;
 export declare const api: FilterApi<
