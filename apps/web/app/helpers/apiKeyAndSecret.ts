@@ -1,7 +1,20 @@
-import { createHash } from 'crypto'
+import { generateKeyPairSync } from 'crypto';
 
-export function generateTimeHash() {
-    const currentTime = Date.now().toString() + process.env.HASHSECRET
-    const hash = createHash('md5').update(currentTime).digest('hex')
-    return hash
+export async function generateKeyAndSecret() {
+    const { publicKey, privateKey } = generateKeyPairSync('rsa', {
+        modulusLength: 2048,
+        publicKeyEncoding: {
+            type: 'spki',
+            format: 'pem',
+        },
+        privateKeyEncoding: {
+            type: 'pkcs8',
+            format: 'pem',
+        },
+    });
+
+    return {
+        publicKey,
+        privateKey,
+    };
 }

@@ -5,4 +5,6 @@ export const userAuthType = z.object({
     password: z.string({ message: "password not provided" })
         .min(6, { message: "minimum length of password should be 6" })
         .max(20, { message: "maximum length of password should be 20" }),
+    orgId: z.string({ message: "org id not provided" })
+        .min(1, { message: "minimum length of password should be 1" })
 })
