@@ -43,6 +43,20 @@
       "when": 1752650885102,
       "tag": "0005_nervous_invaders",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1752870218211,
+      "tag": "0006_giant_wolfsbane",
+      "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1752911214366,
+      "tag": "0007_square_lady_vermin",
+      "breakpoints": true
     }
   ]
 }
