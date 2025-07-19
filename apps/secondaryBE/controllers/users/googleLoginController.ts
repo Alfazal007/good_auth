@@ -4,7 +4,6 @@ import { OAuth2Client } from "google-auth-library"
 import { tryCatch } from "../../helpers/tryCatch"
 import { db } from "../../helpers/database"
 import { databaseSchema } from "@repo/database"
-import { normalTable } from "@repo/database/db/schema"
 
 const client = new OAuth2Client(process.env.AUTHCLIENTIDGOOGLE!)
 
@@ -31,13 +30,8 @@ export async function googleTokenLogin(req: Request, res: Response) {
             return res.status(500).json({ message: 'Google errors' })
         }
         const insertUserDataResult = await tryCatch(db.insert(databaseSchema.normalTable)
-            .values({ email, isVerified: true, password: "no_password" })
-            .onConflictDoUpdate({
-                target: [normalTable.email],
-                set: {
-                    isVerified: true,
-                },
-            }).returning())
+            .values({ email, password: "no_password", organization: orgId })
+            .onConflictDoNothing().returning())
         if (!insertUserDataResult.error) {
             return res.status(500).json({ message: 'Issue talking to the database' })
         }

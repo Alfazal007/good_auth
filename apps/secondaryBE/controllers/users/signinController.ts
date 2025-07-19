@@ -8,8 +8,9 @@ import { db } from "../../helpers/database";
 import { databaseSchema } from "@repo/database";
 import { eq, and } from 'drizzle-orm';
 import { comparePassword } from "../../helpers/hashPassword";
-import { signEmail } from "../../helpers/tokens";
+import { signEmail } from "../../helpers/signEmailPrivateKey";
 import { redis } from "../../helpers/redis";
+import { generateToken } from "../../helpers/jwtHandler";
 
 export async function signinController(req: Request, res: Response) {
     try {
@@ -89,10 +90,12 @@ export async function signinController(req: Request, res: Response) {
             })
         }
 
-        const accessToken = signEmail(existingData.email, apiSecret)
+        const signedEmail = signEmail(existingData.email, apiSecret)
+        const accessToken = generateToken(signedEmail)
         if (!redis.isReady) {
             await redis.connect()
         }
+
         await tryCatch(redis.set(`ACCESSTOKENORGS:${existingData.id}`, accessToken))
         return res
             .status(200)

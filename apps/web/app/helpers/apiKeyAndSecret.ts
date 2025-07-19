@@ -1,20 +1,13 @@
-import { generateKeyPairSync } from 'crypto';
+import nacl from 'tweetnacl'
+import { encodeBase64 } from 'tweetnacl-util';
 
-export async function generateKeyAndSecret() {
-    const { publicKey, privateKey } = generateKeyPairSync('rsa', {
-        modulusLength: 2048,
-        publicKeyEncoding: {
-            type: 'spki',
-            format: 'pem',
-        },
-        privateKeyEncoding: {
-            type: 'pkcs8',
-            format: 'pem',
-        },
-    });
+export function generateEd25519KeyPair() {
+    const keyPair = nacl.sign.keyPair();
+    const privateKeySeed = keyPair.secretKey.slice(0, 32);
+    const publicKey = keyPair.publicKey;
 
     return {
-        publicKey,
-        privateKey,
+        privateKey: encodeBase64(privateKeySeed),
+        publicKey: encodeBase64(publicKey),
     };
 }

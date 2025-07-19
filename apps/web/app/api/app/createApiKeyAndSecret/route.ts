@@ -5,7 +5,7 @@ import { convexClient } from "@/helpers/convex";
 import { auth } from "@/helpers/auth";
 import { createApiKeyType } from "@/zodTypes/project/createApiKey";
 import { Id } from "@repo/convex/convex/_generated/dataModel";
-import { generateKeyAndSecret } from "@/helpers/apiKeyAndSecret";
+import { generateEd25519KeyPair } from "@/helpers/apiKeyAndSecret";
 
 export async function POST(req: NextRequest) {
     const user = await auth(req)
@@ -56,11 +56,11 @@ export async function POST(req: NextRequest) {
         })
     }
 
-    const { privateKey, publicKey } = await generateKeyAndSecret()
+    const { privateKey, publicKey } = generateEd25519KeyPair()
 
     const convexResult = await tryCatch(convexClient.mutation(api.createApiKeyAndSecret.createApiKeyAndSecret, {
-        apiKey: privateKey,
-        apiSecret: publicKey,
+        apiKey: publicKey,
+        apiSecret: privateKey,
         organization: parsedData.data.projectId as Id<"organizations">
     }))
 
