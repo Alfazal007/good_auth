@@ -1,12 +1,11 @@
 "use client"
 
 import axios from "axios"
-import { useRouter } from "next/navigation"
 import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google'
 import { toast } from "sonner"
+import type { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime"
 
-export function Google() {
-    const router = useRouter()
+export function Google({ router }: { router: AppRouterInstance }) {
     const clientId = "372403264927-l5v70ec5k2ef9k6m5s1nfghu3s761638.apps.googleusercontent.com"
     const handleSuccess = async (credentialResponse: any) => {
         try {

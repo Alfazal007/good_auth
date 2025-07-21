@@ -1,6 +1,6 @@
 "use client"
 
-import { UserContext } from "@itachi__uchiha/goodauth/client"
+import { User, UserContext } from "@itachi__uchiha/goodauthfe"
 import { useRouter } from "next/navigation"
 import { useContext, useEffect } from "react"
 
@@ -19,6 +19,7 @@ export default function() {
         <>
             Authenticated page
             {user}
+            <User email="" name="" profile="" />
         </>
     )
 }
