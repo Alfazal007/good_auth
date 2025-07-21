@@ -111,7 +111,6 @@ export async function signinController(req: Request, res: Response) {
             })
             .cookie("accessToken", accessToken, {
                 secure: true,
-                httpOnly: true,
                 path: '/',
                 maxAge: 60 * 60 * 24,
             })

@@ -1,6 +1,6 @@
 import jwt, { JwtPayload } from "jsonwebtoken"
-import { decodeBase64 } from 'tweetnacl-util';
-import nacl from 'tweetnacl';
+import { decodeBase64 } from 'tweetnacl-util'
+import nacl from 'tweetnacl'
 
 export function isUserAuthenticated(token: string, apiKey: string, email: string): boolean {
     const [tokenValid, tokenData] = verifyToken(token)
@@ -21,8 +21,8 @@ function verifyToken(token: string): [boolean, any] {
 }
 
 export function verifyEmailSignature(email: string, signatureBase64: string, publicKeyBase64: string): boolean {
-    const publicKey = decodeBase64(publicKeyBase64);
-    const signature = decodeBase64(signatureBase64);
-    const message = new TextEncoder().encode(email);
-    return nacl.sign.detached.verify(message, signature, publicKey);
+    const publicKey = decodeBase64(publicKeyBase64)
+    const signature = decodeBase64(signatureBase64)
+    const message = new TextEncoder().encode(email)
+    return nacl.sign.detached.verify(message, signature, publicKey)
 }
