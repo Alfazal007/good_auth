@@ -1,3 +1,5 @@
+"use client"
+
 import React, { createContext, useState } from "react";
 
 export type UserType = {
@@ -22,4 +24,4 @@ export const UserProvider = ({ children }: { children: React.ReactNode }) => {
             {children}
         </UserContext.Provider >
     );
-}
+};

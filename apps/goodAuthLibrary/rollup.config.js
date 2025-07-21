@@ -37,12 +37,8 @@ const createConfig = (input, file, format) => ({
 });
 
 export default [
-    createConfig('src/index.ts', 'dist/index.js', 'cjs'),
-    createConfig('src/index.ts', 'dist/index.esm.js', 'esm'),
     createConfig('src/client.ts', 'dist/client.js', 'cjs'),
     createConfig('src/client.ts', 'dist/client.esm.js', 'esm'),
-    createConfig('src/server.ts', 'dist/server.js', 'cjs'),
-    createConfig('src/server.ts', 'dist/server.esm.js', 'esm'),
 ];
 
 

@@ -12,7 +12,7 @@ export function Google() {
         try {
             const res = await axios.post('http://localhost:8000/api/google-login', {
                 token: credentialResponse.credential,
-                orgApiKey: process.env.GOODAUTHAPIKEY!,
+                orgApiKey: clientId,
                 orgId: process.env.ORGID!,
             })
             console.log('User data:', res.data)

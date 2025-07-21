@@ -1,3 +1,5 @@
+"use client"
+
 export function User(props: { profile: string, name: string, email: string }) {
     const { profile, name, email } = props
     return (
