@@ -1,9 +1,14 @@
-import { SignIn } from "@itachi__uchiha/goodauth/client";
+"use client"
+
+import { SignInWrapper } from "@/components/Signinwrapper"
+import { useRouter } from "next/navigation"
 
 export default function() {
+    const router = useRouter()
+
     return (
         <>
-            <SignIn orgName="example" redirectUrl="http://locahost:3001/authenticated/home" />
+            <SignInWrapper orgName="example" redirectUrl="http://localhost:3001/authenticated/home" router={router} />
         </>
     )
 }

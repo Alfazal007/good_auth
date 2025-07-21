@@ -2,34 +2,47 @@
 
 import React, { useState } from 'react'
 import { Shield, Mail, Lock, Eye, EyeOff } from 'lucide-react'
-import { useRouter } from 'next/navigation'
-import axios from 'axios'
-import { toast } from 'sonner'
 import { Google } from './Google'
+import axios from 'axios'
+import type { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime'
 
-export function SignIn(props: { redirectUrl: string, orgName: string }) {
-    const { redirectUrl, orgName } = props
-    const [email, setEmail] = useState('')
-    const [password, setPassword] = useState('')
+export function SignUp({ orgName, router }: { orgName: string, router: AppRouterInstance }) {
+    const [formData, setFormData] = useState({
+        email: '',
+        password: '',
+        confirmPassword: ''
+    })
+
     const [showPassword, setShowPassword] = useState(false)
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
 
-    const router = useRouter()
+    const handleInputChange = (field: string, value: string) => {
+        setFormData(prev => ({ ...prev, [field]: value }))
+    }
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
-        setIsLoading(true)
-        try {
-            const signInUrl = `http://localhost:8000/api/signin`
-            await axios.post(signInUrl, {
-                email,
-                password
-            }, { withCredentials: true })
-            router.push(redirectUrl)
+        if (formData.password !== formData.confirmPassword) {
+            console.log("Passwords do not match")
             return
+        }
+        setIsLoading(true)
+        const signUpUrl = `http://localhost:8000/api/signup`
+        try {
+            const signUpResponse = await axios.post(signUpUrl, {
+                "email": formData.email,
+                "password": formData.password,
+                "orgId": process.env.ORGID!
+            })
+            if (signUpResponse.status == 201) {
+                router.push("/auth/signin")
+                return
+            } else {
+                console.log("Issue signing up")
+            }
         } catch (err) {
             console.log({ err })
-            toast("Issue signing in")
         } finally {
             setIsLoading(false)
         }
@@ -43,12 +56,12 @@ export function SignIn(props: { redirectUrl: string, orgName: string }) {
                         <Shield className="h-8 w-8 text-blue-400" />
                         <span className="text-2xl font-bold text-white">{orgName}</span>
                     </div>
-                    <h1 className="text-3xl font-bold text-white mb-2">Welcome back</h1>
-                    <p className="text-gray-400">Sign in to your account to continue</p>
+                    <h1 className="text-3xl font-bold text-white mb-2">Create your account</h1>
+                    <p className="text-gray-400">Get started with {orgName} today</p>
                 </div>
 
                 <div className="bg-gray-800 p-8 rounded-xl border border-gray-700">
-                    <Google />
+                    <Google router={router} />
 
                     <div className="relative mb-6">
                         <div className="absolute inset-0 flex items-center">
@@ -69,8 +82,8 @@ export function SignIn(props: { redirectUrl: string, orgName: string }) {
                                 <input
                                     id="email"
                                     type="email"
-                                    value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
+                                    value={formData.email}
+                                    onChange={(e) => handleInputChange('email', e.target.value)}
                                     className="w-full pl-10 pr-4 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                                     placeholder="Enter your email"
                                     required
@@ -87,10 +100,10 @@ export function SignIn(props: { redirectUrl: string, orgName: string }) {
                                 <input
                                     id="password"
                                     type={showPassword ? 'text' : 'password'}
-                                    value={password}
-                                    onChange={(e) => setPassword(e.target.value)}
+                                    value={formData.password}
+                                    onChange={(e) => handleInputChange('password', e.target.value)}
                                     className="w-full pl-10 pr-12 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                    placeholder="Enter your password"
+                                    placeholder="Create a password"
                                     required
                                 />
                                 <button
@@ -103,13 +116,43 @@ export function SignIn(props: { redirectUrl: string, orgName: string }) {
                             </div>
                         </div>
 
-                        <div className="flex items-center justify-between">
-                            <label className="flex items-center">
-                                <input
-                                    type="checkbox"
-                                    className="rounded border-gray-600 bg-gray-700 text-blue-600 focus:ring-blue-500 focus:ring-offset-gray-800"
-                                />
+                        <div>
+                            <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-300 mb-2">
+                                Confirm password
                             </label>
+                            <div className="relative">
+                                <Lock className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                                <input
+                                    id="confirmPassword"
+                                    type={showConfirmPassword ? 'text' : 'password'}
+                                    value={formData.confirmPassword}
+                                    onChange={(e) => handleInputChange('confirmPassword', e.target.value)}
+                                    className="w-full pl-10 pr-12 py-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                    placeholder="Confirm your password"
+                                    required
+                                />
+                                <button
+                                    type="button"
+                                    onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+                                    className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-300"
+                                >
+                                    {showConfirmPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
+                                </button>
+                            </div>
+                        </div>
+
+                        <div className="flex items-start">
+                            <input
+                                type="checkbox"
+                                className="rounded border-gray-600 bg-gray-700 text-blue-600 focus:ring-blue-500 focus:ring-offset-gray-800 mt-1"
+                                required
+                            />
+                            <span className="ml-2 text-sm text-gray-300">
+                                I agree to the{' '}
+                                <a href="#" className="text-blue-400 hover:text-blue-300">Terms of Service</a>
+                                {' '}and{' '}
+                                <a href="#" className="text-blue-400 hover:text-blue-300">Privacy Policy</a>
+                            </span>
                         </div>
 
                         <button
@@ -120,15 +163,15 @@ export function SignIn(props: { redirectUrl: string, orgName: string }) {
                             {isLoading ? (
                                 <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
                             ) : (
-                                'Sign In'
+                                'Create Account'
                             )}
                         </button>
                     </form>
 
                     <p className="text-center text-gray-400 mt-6">
-                        Don't have an account?{' '}
-                        <button className="text-blue-400 hover:text-blue-300 font-medium" onClick={() => { router.push("/auth/signup") }}>
-                            Sign up
+                        Already have an account?{' '}
+                        <button className="text-blue-400 hover:text-blue-300 font-medium" onClick={() => { router.push("/auth/signin") }}>
+                            Sign in
                         </button>
                     </p>
                 </div>
@@ -136,5 +179,3 @@ export function SignIn(props: { redirectUrl: string, orgName: string }) {
         </div>
     )
 }
-
-export default SignIn
