@@ -1,28 +1,45 @@
 "use client"
 
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import { Shield, Mail, Lock, Eye, EyeOff } from 'lucide-react'
 import axios from 'axios'
 import { toast } from 'sonner'
 import { Google } from './Google'
 import type { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime'
+import { UserContext } from '../context/UserContext'
 
-export function SignIn(props: { redirectUrl: string, orgName: string, router: AppRouterInstance }) {
+export function SignIn(props: { redirectUrl: string, orgName: string, router: AppRouterInstance, orgId: string }) {
     const { redirectUrl, orgName, router } = props
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
     const [showPassword, setShowPassword] = useState(false)
     const [isLoading, setIsLoading] = useState(false)
+    const { setUser } = useContext(UserContext)
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault()
         setIsLoading(true)
         try {
             const signInUrl = `http://localhost:8000/api/signin`
-            await axios.post(signInUrl, {
+            const dataToSend = {
                 email,
-                password
-            }, { withCredentials: true })
+                password,
+                orgId: props.orgId
+            }
+            console.log({ dataToSend })
+            const userResponse = await axios.post(signInUrl, dataToSend, { withCredentials: true })
+            console.log("setting",
+                {
+                    email: userResponse.data.email,
+                    id: userResponse.data.id,
+                    accessToken: userResponse.data.accessToken
+                }
+            )
+            setUser({
+                email: userResponse.data.email,
+                id: userResponse.data.id,
+                accessToken: userResponse.data.accessToken
+            })
             router.push(redirectUrl)
             return
         } catch (err) {
@@ -46,7 +63,7 @@ export function SignIn(props: { redirectUrl: string, orgName: string, router: Ap
                 </div>
 
                 <div className="bg-gray-800 p-8 rounded-xl border border-gray-700">
-                    <Google router={router} />
+                    <Google router={router} orgId={props.orgId} />
 
                     <div className="relative mb-6">
                         <div className="absolute inset-0 flex items-center">

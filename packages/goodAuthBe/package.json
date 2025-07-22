@@ -1,18 +1,18 @@
 {
   "name": "@itachi__uchiha/goodauthbe",
-  "version": "0.1.4",
+  "version": "0.1.11",
   "description": "",
-  "main": "dist/index.cjs",
-  "module": "dist/index.mjs",
-  "types": "dist/index.d.ts",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "type": "module",
   "publishConfig": {
     "access": "public"
   },
   "exports": {
     ".": {
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.cjs",
+      "import": "./dist/index.js",
+      "require": "./dist/index.js",
       "types": "./dist/index.d.ts"
     }
   },
@@ -42,5 +42,9 @@
     "@types/node": "^22.15.3",
     "next": "^15.3.0",
     "typescript": "^5.8.2"
+  },
+  "dependencies": {
+    "@itachi__uchiha/goodauthbe": "^0.1.10",
+    "@itachi__uchiha/goodauthfe": "^0.1.14"
   }
 }

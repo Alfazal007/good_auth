@@ -6,7 +6,7 @@ import { Google } from './Google'
 import axios from 'axios'
 import type { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime'
 
-export function SignUp({ orgName, router }: { orgName: string, router: AppRouterInstance }) {
+export function SignUp({ orgName, router, orgId }: { orgName: string, router: AppRouterInstance, orgId: string }) {
     const [formData, setFormData] = useState({
         email: '',
         password: '',
@@ -29,12 +29,14 @@ export function SignUp({ orgName, router }: { orgName: string, router: AppRouter
         }
         setIsLoading(true)
         const signUpUrl = `http://localhost:8000/api/signup`
+        const dataBeingSent = {
+            "email": formData.email,
+            "password": formData.password,
+            "orgId": orgId
+        }
+        console.log({ dataBeingSent })
         try {
-            const signUpResponse = await axios.post(signUpUrl, {
-                "email": formData.email,
-                "password": formData.password,
-                "orgId": process.env.ORGID!
-            })
+            const signUpResponse = await axios.post(signUpUrl, dataBeingSent)
             if (signUpResponse.status == 201) {
                 router.push("/auth/signin")
                 return
@@ -61,7 +63,7 @@ export function SignUp({ orgName, router }: { orgName: string, router: AppRouter
                 </div>
 
                 <div className="bg-gray-800 p-8 rounded-xl border border-gray-700">
-                    <Google router={router} />
+                    <Google router={router} orgId={orgId} />
 
                     <div className="relative mb-6">
                         <div className="absolute inset-0 flex items-center">

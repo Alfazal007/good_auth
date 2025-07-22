@@ -6,3 +6,5 @@ export { SignIn } from './components/Signin';
 export { UserContext } from './context/UserContext';
 export { UserProvider } from './context/UserContext';
 
+export { getUser } from "./functions/getUser"
+
