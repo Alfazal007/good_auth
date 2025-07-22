@@ -62,6 +62,9 @@ export async function POST(req: NextRequest) {
     }
 
     const accessToken = generateAccessToken(insertedUser.email, insertedUser.id)
+    if (!redis.isOpen) {
+        await redis.connect()
+    }
     await tryCatch(redis.set(`ACCESSTOKENORGS:${insertedUser.id}`, accessToken))
 
     const response = NextResponse.json({

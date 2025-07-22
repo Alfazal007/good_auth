@@ -1,25 +1,42 @@
 "use client"
 
-import { User, UserContext } from "@itachi__uchiha/goodauthfe"
+import { getUser, User } from "@itachi__uchiha/goodauthfe"
+import axios from "axios"
 import { useRouter } from "next/navigation"
-import { useContext, useEffect } from "react"
+import { useEffect, useState } from "react"
 
 export default function() {
-    const { user } = useContext(UserContext)
     const router = useRouter()
+    const [userCurrent, setUserCurrent] = useState<{
+        email: string;
+        token: string;
+        id: number;
+    } | null>(null)
+
+
+    async function request() {
+        const response = await axios.get("http://localhost:3001/api/user")
+        console.log({ response })
+        console.log({ responseStatus: response.status })
+    }
 
     useEffect(() => {
+        const user = getUser()
+        console.log({ user })
+        setUserCurrent(user)
         if (!user) {
             router.push("/auth/signin")
             return
         }
+        request()
     }, [])
+
+    const dummyProfileUrl = `https://static.vecteezy.com/system/resources/previews/043/361/860/non_2x/hand-drawnman-avatar-profile-icon-for-social-networks-forums-and-dating-sites-user-avatar-profile-placeholder-anonymous-user-male-no-photo-web-template-default-user-picture-profile-male-symbol-free-vector.jpg`
 
     return (
         <>
-            Authenticated page
-            {user}
-            <User email="" name="" profile="" />
+            Authenticated page normal not google auth redirected
+            <User email={userCurrent?.email || ""} name={userCurrent?.email || ""} profile={dummyProfileUrl} />
         </>
     )
 }

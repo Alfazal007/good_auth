@@ -5,14 +5,14 @@ import { GoogleOAuthProvider, GoogleLogin } from '@react-oauth/google'
 import { toast } from "sonner"
 import type { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime"
 
-export function Google({ router }: { router: AppRouterInstance }) {
+export function Google({ router, orgId }: { router: AppRouterInstance, orgId: string }) {
     const clientId = "372403264927-l5v70ec5k2ef9k6m5s1nfghu3s761638.apps.googleusercontent.com"
     const handleSuccess = async (credentialResponse: any) => {
         try {
             const res = await axios.post('http://localhost:8000/api/google-login', {
                 token: credentialResponse.credential,
                 orgApiKey: clientId,
-                orgId: process.env.ORGID!,
+                orgId,
             })
             console.log('User data:', res.data)
             router.push("/organization/home")

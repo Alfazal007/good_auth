@@ -1,5 +1,6 @@
 "use client"
 
+import { ORGID } from "@/constants"
 import { SignUp } from "@itachi__uchiha/goodauthfe"
 import { useRouter } from "next/navigation"
 
@@ -8,7 +9,7 @@ export default function() {
 
     return (
         <>
-            <SignUp orgName="example" router={router} />
+            <SignUp orgName="example" router={router} orgId={ORGID} />
         </>
     )
 }

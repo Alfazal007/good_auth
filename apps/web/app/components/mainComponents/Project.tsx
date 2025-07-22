@@ -193,6 +193,23 @@ function Projects() {
 
                         {apiKeySecret?.apiKey ? (
                             <div className="space-y-6">
+                                <div>
+                                    <label className="block text-sm font-medium text-gray-300 mb-2">
+                                        Org Id
+                                    </label>
+                                    <div className="flex items-center space-x-2">
+                                        <div className="flex-1 bg-gray-700 border border-gray-600 rounded-lg px-4 py-3 font-mono text-sm text-white">
+                                            {selectedProject._id!}
+                                        </div>
+                                        <button
+                                            onClick={() => copyToClipboard(selectedProject._id!)}
+                                            className="bg-gray-700 hover:bg-gray-600 border border-gray-600 p-3 rounded-lg transition-colors"
+                                            title="Copy API Key"
+                                        >
+                                            <Copy className="h-4 w-4 text-gray-300" />
+                                        </button>
+                                    </div>
+                                </div>
                                 {/* API Key */}
                                 <div>
                                     <label className="block text-sm font-medium text-gray-300 mb-2">

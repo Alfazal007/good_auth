@@ -91,7 +91,7 @@ export async function signinController(req: Request, res: Response) {
         }
 
         const signedEmail = signEmail(existingData.email, apiSecret)
-        const accessToken = generateToken(signedEmail)
+        const accessToken = generateToken(signedEmail, apiSecret)
         if (!redis.isReady) {
             await redis.connect()
         }
@@ -115,7 +115,9 @@ export async function signinController(req: Request, res: Response) {
                 maxAge: 60 * 60 * 24,
             })
             .json({
-                message: "User logged in successfully",
+                email: existingData.email,
+                accessToken,
+                id: existingData.id
             })
     } catch (err) {
         return res.status(500).json({
