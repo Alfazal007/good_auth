@@ -1,2 +1,2 @@
-export const ORGID = 'j571838k5e7pavzq9t07rgdfsh7m6c6a'
-export const GOODAUTHAPIKEY = 'QIf0QOF3eUhwcLpiWsz+HD0qfGlhkRJ7NqWh5bLhfhc='
+export const ORGID = 'j5734knxv6evnq4btdb62z0r6x7m96yd'
+export const GOODAUTHAPIKEY = 'gLybFWReX/xyL2DzCxGVMG8r7URlSVV3d/2E3HFv2ng='

@@ -10,6 +10,7 @@ const client = new OAuth2Client(process.env.AUTHCLIENTIDGOOGLE!)
 export async function googleTokenLogin(req: Request, res: Response) {
     try {
         const { token, orgApiKey, orgId } = req.body
+        console.log({ token, orgApiKey, orgId })
         const isValidUserRequestForOrg = await isTokenValid(orgId, orgApiKey)
         if (!isValidUserRequestForOrg) {
             return res.status(401).json({

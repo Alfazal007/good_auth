@@ -15,7 +15,7 @@ export default function() {
 
 
     async function request() {
-        const response = await axios.get("http://localhost:3001/api/user")
+        const response = await axios.get("http://localhost:3001/api/user", { withCredentials: true })
         console.log({ response })
         console.log({ responseStatus: response.status })
     }

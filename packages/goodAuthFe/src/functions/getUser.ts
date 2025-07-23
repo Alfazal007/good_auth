@@ -1,4 +1,15 @@
+import Cookies from "js-cookie"
+
 export function getUser() {
+    const params = new URLSearchParams(window.location.search)
+    const urlToken = params.get("accessToken")
+    const urlEmail = params.get("email")
+    const urlId = params.get("id")
+    if (urlId && urlEmail && urlToken) {
+        setCookies("email", urlEmail)
+        setCookies("accessToken", urlToken)
+        setCookies("id", urlId)
+    }
     const email = getCookie("email")
     const token = getCookie("accessToken");
     const idString = getCookie("id");
@@ -21,3 +32,10 @@ function getCookie(name: string): string | null {
     return null;
 }
 
+export function setCookies(key: string, value: string) {
+    Cookies.set(key, value, {
+        secure: true,
+        path: "/",
+        expires: 1,
+    })
+}

@@ -6,7 +6,8 @@ import { toast } from "sonner"
 import type { AppRouterInstance } from "next/dist/shared/lib/app-router-context.shared-runtime"
 
 export function Google({ router, orgId }: { router: AppRouterInstance, orgId: string }) {
-    const clientId = "372403264927-l5v70ec5k2ef9k6m5s1nfghu3s761638.apps.googleusercontent.com"
+    const clientId = "372403264927-dppev4ae1o9r60kv9db5phh81ejs1kg6.apps.googleusercontent.com"
+
     const handleSuccess = async (credentialResponse: any) => {
         try {
             const res = await axios.post('http://localhost:8000/api/google-login', {

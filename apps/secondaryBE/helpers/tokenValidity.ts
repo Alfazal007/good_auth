@@ -8,9 +8,11 @@ export async function isTokenValid(orgId: string, orgApiKey: string): Promise<bo
         id: orgId as Id<"organizations">
     }))
     if (convexDataResult.error) {
+        console.log({ err: convexDataResult.error })
         return false
     }
     const { apiKey } = convexDataResult.data
+    console.log({ data: convexDataResult.data })
     if (!apiKey) {
         return false
     }

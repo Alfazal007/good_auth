@@ -1,7 +1,7 @@
 "use client"
 
 import { SignInWrapper } from "@/components/Signinwrapper"
-import { ORGID } from "@/constants"
+import { GOODAUTHAPIKEY, ORGID } from "@/constants"
 import { useRouter } from "next/navigation"
 
 export default function() {
@@ -9,7 +9,7 @@ export default function() {
 
     return (
         <>
-            <SignInWrapper orgName="example" redirectUrl="http://localhost:3001/authenticated/home" router={router} orgId={ORGID} />
+            <SignInWrapper orgName="example" redirectUrl="http://localhost:3001/authenticated/home" router={router} orgId={ORGID} apiKey={GOODAUTHAPIKEY} />
         </>
     )
 }

@@ -17,7 +17,6 @@ export async function signupController(req: Request, res: Response) {
                 message: "no request body provided"
             })
         }
-        console.log({ body })
         const parsedData = userAuthType.safeParse(body)
         if (!parsedData.success) {
             const errors: string[] = []

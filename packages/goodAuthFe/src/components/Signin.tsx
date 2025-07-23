@@ -4,11 +4,11 @@ import React, { useContext, useState } from 'react'
 import { Shield, Mail, Lock, Eye, EyeOff } from 'lucide-react'
 import axios from 'axios'
 import { toast } from 'sonner'
-import { Google } from './Google'
 import type { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime'
 import { UserContext } from '../context/UserContext'
+import { GoogleRedirect } from './GoogleRedirect'
 
-export function SignIn(props: { redirectUrl: string, orgName: string, router: AppRouterInstance, orgId: string }) {
+export function SignIn(props: { redirectUrl: string, orgName: string, router: AppRouterInstance, orgId: string, apiKey: string }) {
     const { redirectUrl, orgName, router } = props
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
@@ -63,7 +63,7 @@ export function SignIn(props: { redirectUrl: string, orgName: string, router: Ap
                 </div>
 
                 <div className="bg-gray-800 p-8 rounded-xl border border-gray-700">
-                    <Google router={router} orgId={props.orgId} />
+                    <GoogleRedirect redirectUrl={redirectUrl} apiKey={props.apiKey} orgId={props.orgId} />
 
                     <div className="relative mb-6">
                         <div className="absolute inset-0 flex items-center">

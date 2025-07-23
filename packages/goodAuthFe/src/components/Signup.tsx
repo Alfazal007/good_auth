@@ -2,11 +2,11 @@
 
 import React, { useState } from 'react'
 import { Shield, Mail, Lock, Eye, EyeOff } from 'lucide-react'
-import { Google } from './Google'
 import axios from 'axios'
 import type { AppRouterInstance } from 'next/dist/shared/lib/app-router-context.shared-runtime'
+import { GoogleRedirect } from './GoogleRedirect'
 
-export function SignUp({ orgName, router, orgId }: { orgName: string, router: AppRouterInstance, orgId: string }) {
+export function SignUp({ orgName, router, orgId, redirectUrl, apiKey }: { redirectUrl: string, orgName: string, router: AppRouterInstance, orgId: string, apiKey: string }) {
     const [formData, setFormData] = useState({
         email: '',
         password: '',
@@ -63,7 +63,7 @@ export function SignUp({ orgName, router, orgId }: { orgName: string, router: Ap
                 </div>
 
                 <div className="bg-gray-800 p-8 rounded-xl border border-gray-700">
-                    <Google router={router} orgId={orgId} />
+                    <GoogleRedirect redirectUrl={redirectUrl} apiKey={apiKey} orgId={orgId} />
 
                     <div className="relative mb-6">
                         <div className="absolute inset-0 flex items-center">

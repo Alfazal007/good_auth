@@ -1,6 +1,6 @@
 "use client"
 
-import { ORGID } from "@/constants"
+import { GOODAUTHAPIKEY, ORGID } from "@/constants"
 import { SignUp } from "@itachi__uchiha/goodauthfe"
 import { useRouter } from "next/navigation"
 
@@ -9,7 +9,7 @@ export default function() {
 
     return (
         <>
-            <SignUp orgName="example" router={router} orgId={ORGID} />
+            <SignUp orgName="example" router={router} orgId={ORGID} redirectUrl="http://localhost:3001/authenticated/home" apiKey={GOODAUTHAPIKEY} />
         </>
     )
 }

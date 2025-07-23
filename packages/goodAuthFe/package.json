@@ -1,6 +1,6 @@
 {
   "name": "@itachi__uchiha/goodauthfe",
-  "version": "0.1.14",
+  "version": "0.1.18",
   "private": false,
   "type": "module",
   "main": "./dist/my-nextjs-library.umd.cjs",
